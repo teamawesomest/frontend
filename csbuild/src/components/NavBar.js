@@ -14,6 +14,9 @@ const NavBar = props => {
         <Link to="/register">
           <button>Register</button>
         </Link>
+        <Link to="/gamestuff">
+          <button>Game Stuff</button>
+        </Link>
       </nav>
     </div>
   );

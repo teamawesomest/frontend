@@ -5,16 +5,16 @@ import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import NavBar from "./components/NavBar";
-import Login from "./components/Login";
-import Registration from "./components/Registration";
+import Credentials from "./components/Credentials";
+import GameStuff from "./components/GameStuff";
 
 function App() {
   return (
     <div className="App">
       <Router>
         <NavBar />
-        <Route exact path="/login" component={Login} />
-        <Route path="/register" component={Registration} />
+        <Route path="/login" component={Credentials} />
+        <Route path="/gamestuff" component={GameStuff} />
       </Router>
     </div>
   );
