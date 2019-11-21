@@ -6,7 +6,8 @@ const Credentials = props => {
   const [input, setInput] = useState({
     form: {
       username: "",
-      password: ""
+      password1: "",
+      password2: ""
     }
   });
 
@@ -29,17 +30,19 @@ const Credentials = props => {
     // e.preventDefault()
     const newUser = {
       username: input.form.username,
-      password: input.form.password
+      password1: input.form.password1,
+      password2: input.form.password2
     };
     axios
       // .post('http://localhost:5000/api/register', newUser)
       .post(
-        "https://cs-build-week-adventure-game.herokuapp.com/api/register/",
+        "https://cs-build-week-adventure-game.herokuapp.com/api/registration/",
         newUser
       )
       .then(response => {
         console.log(response);
         localStorage.setItem("token", response.data.key);
+        localStorage.setItem("username", input.form.username);
         props.history.push("/gamestuff");
       })
       .catch(error => {
@@ -52,12 +55,13 @@ const Credentials = props => {
 
       .post("https://cs-build-week-adventure-game.herokuapp.com/api/login/", {
         username: input.form.username,
-        password: input.form.password
+        password: input.form.password1
       })
       .then(response => {
         console.log(response);
         localStorage.setItem("token", response.data.key);
-        props.history.push("/gamestuff");
+        localStorage.setItem("username", input.form.username);
+        props.history.push("/");
       })
       .catch(error => {
         console.log(error);
@@ -69,12 +73,8 @@ const Credentials = props => {
       <div className="outer-container">
         <div className="Container">
           <div className="Login">
-            <a href="#" style={{ textDecoration: "underline" }}>
-              Login
-            </a>
-            <a href="#" onClick={toggle}>
-              Register
-            </a>
+            <button disabled={true}>Login</button>
+            <button onClick={toggle}>Register</button>
           </div>
           <Form>
             <Form.Field>
@@ -90,8 +90,8 @@ const Credentials = props => {
               <input
                 placeholder="password"
                 type="password"
-                name="password"
-                value={input.form.password}
+                name="password1"
+                value={input.form.password1}
                 onChange={handleChanges}
               />
             </Form.Field>
@@ -107,12 +107,8 @@ const Credentials = props => {
       <div className="outer-container">
         <div className="Container">
           <div className="Login">
-            <a href="#" onClick={toggle}>
-              Login
-            </a>
-            <a href="#" style={{ textDecoration: "underline" }}>
-              Register
-            </a>
+            <button onClick={toggle}>Login</button>
+            <button disabled={true}>Register</button>
           </div>
           <Form>
             <Form.Field>
@@ -128,8 +124,17 @@ const Credentials = props => {
               <input
                 placeholder="password"
                 type="password"
-                name="password"
-                value={input.form.password}
+                name="password1"
+                value={input.form.password1}
+                onChange={handleChanges}
+              />
+            </Form.Field>
+            <Form.Field>
+              <input
+                placeholder="confirm password"
+                type="password"
+                name="password2"
+                value={input.form.password2}
                 onChange={handleChanges}
               />
             </Form.Field>

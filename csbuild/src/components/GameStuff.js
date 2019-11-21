@@ -1,95 +1,61 @@
 import React, { useState, useEffect } from "react";
 import { axiosWithAuth } from "./axiosWithAuth";
-import axios from "axios";
+// import axios from "axios";
 
 const GameStuff = props => {
-  const [state, setState] = useState([]);
-  const gameInfo = () => {
-    let config = {
-      headers: {
-        Authorization: localStorage.getItem("token")
-      }
-    };
-    const token = localStorage.getItem("token");
-    console.log("test", token);
+  const [state, setState] = useState({});
+  // const [state, setState] = useState({
+  //   name: "",
+  //   title: "",
+  //   description: "",
+  //   players: [],
+  //   error_msg: ""
+  // });
 
+  useEffect(() => {
     axiosWithAuth()
       .get("https://cs-build-week-adventure-game.herokuapp.com/api/adv/init/")
-      .then(response => {
-        console.log(response.data);
-        setState(response.data);
+      .then(res => {
+        // console.log(response.data);
+        console.log(res.data);
+        setState(res.data);
+        //   setState({
+        //     name: res.data.name,
+        //     title: res.data.title,
+        //     description: res.data.description,
+        //     // players: Array.from(res.data.players),
+        //     // players: [state.players, ...res.data.players],
+        //     players: Object.values(res.data.players),
+        //     error_msg: res.data.error_msg
+        //   });
       })
       .catch(error => {
         console.log(error);
       });
-  };
+  }, []);
 
-  const moveNorth = () => {
+  const move = dir => {
     const move = {
-      direction: "n"
+      direction: dir
     };
     axiosWithAuth()
       .post(
         "https://cs-build-week-adventure-game.herokuapp.com/api/adv/move/",
         move
       )
-      .then(response => {
-        console.log(response.data);
-        setState(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  const moveEast = () => {
-    const move = {
-      direction: "e"
-    };
-    axiosWithAuth()
-      .post(
-        "https://cs-build-week-adventure-game.herokuapp.com/api/adv/move/",
-        move
-      )
-      .then(response => {
-        console.log(response.data);
-        setState(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  const moveSouth = () => {
-    const move = {
-      direction: "s"
-    };
-    axiosWithAuth()
-      .post(
-        "https://cs-build-week-adventure-game.herokuapp.com/api/adv/move/",
-        move
-      )
-      .then(response => {
-        console.log(response.data);
-        setState(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  const moveWest = () => {
-    const move = {
-      direction: "w"
-    };
-    axiosWithAuth()
-      .post(
-        "https://cs-build-week-adventure-game.herokuapp.com/api/adv/move/",
-        move
-      )
-      .then(response => {
-        console.log(response.data);
-        setState(response.data);
+      .then(res => {
+        // console.log(response.data);
+        console.log(res.data);
+        setState(res.data);
+        // setState({
+        //   name: res.data.name,
+        //   title: res.data.title,
+        //   description: res.data.description,
+        //   // players: Array.from(res.data.players),
+        //   // players: [state.players, ...res.data.players],
+        //   players: Object.values(res.data.players),
+        //   error_msg: res.data.error_msg
+        // });
       })
       .catch(error => {
         console.log(error);
@@ -97,17 +63,33 @@ const GameStuff = props => {
   };
 
   return (
-    <div>
-      <p>This is the game stuff, suckaz</p>
-      <p>{state.name}</p>
-      <p>{state.title}</p>
-      <p>{state.description}</p>
-      <p>{state.players}</p>
-      <button onClick={gameInfo}>Click for info</button>
-      <button onClick={moveNorth}>Move North</button>
-      <button onClick={moveEast}>Move East</button>
-      <button onClick={moveSouth}>Move South</button>
-      <button onClick={moveWest}>Move West</button>
+    <div className="gamestuff">
+      <div className="stats">
+        <h3>Name</h3>
+        <p>{state.name}</p>
+        <h4>Room</h4>
+        <p>{state.title}</p>
+        <h5>Description</h5>
+        <p>{state.description}</p>
+        {/* {state.players.map(player => {
+          return <p>{player}</p>;
+        })} */}
+        <h5>Players in room</h5>
+        {console.log(`typeof state.players: ${typeof state.players}`)}
+        <p>{state.players}</p>
+      </div>
+
+      <div className="game-container">
+        <div className="placeholder"></div>
+      </div>
+
+      <div className="controls">
+        <button onClick={() => move("n")}>Move North</button>
+        <button onClick={() => move("e")}>Move East</button>
+        <button onClick={() => move("s")}>Move South</button>
+        <button onClick={() => move("w")}>Move West</button>
+        <p>{state.error_msg}</p>
+      </div>
     </div>
   );
 };
