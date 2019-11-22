@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+import "../src/components/GameContainer.css";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 

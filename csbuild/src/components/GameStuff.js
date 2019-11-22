@@ -1,36 +1,60 @@
 import React, { useState, useEffect } from "react";
 import { axiosWithAuth } from "./axiosWithAuth";
-// import axios from "axios";
+
+import GameContainer from "./GameContainer";
 
 const GameStuff = props => {
-  const [state, setState] = useState({});
-  // const [state, setState] = useState({
-  //   name: "",
-  //   title: "",
-  //   description: "",
-  //   players: [],
-  //   error_msg: ""
-  // });
+  // const [state, setState] = useState({});
+  const [state, setState] = useState({
+    name: "",
+    // room_id: "",
+    title: "",
+    description: "",
+    players: [],
+    error_msg: ""
+  });
+  // const [rooms, setRooms] = useState();
+  const [rooms, setRooms] = useState([
+    {
+      id: 1,
+      title: "placeholder",
+      description: "placeholder",
+      n_to: 0,
+      s_to: 0,
+      e_to: 0,
+      w_to: 0,
+      x: 0,
+      y: 0
+    }
+  ]);
 
   useEffect(() => {
     axiosWithAuth()
       .get("https://cs-build-week-adventure-game.herokuapp.com/api/adv/init/")
       .then(res => {
-        // console.log(response.data);
         console.log(res.data);
         setState(res.data);
-        //   setState({
-        //     name: res.data.name,
-        //     title: res.data.title,
-        //     description: res.data.description,
-        //     // players: Array.from(res.data.players),
-        //     // players: [state.players, ...res.data.players],
-        //     players: Object.values(res.data.players),
-        //     error_msg: res.data.error_msg
-        //   });
       })
       .catch(error => {
         console.log(error);
+      });
+    axiosWithAuth()
+      .get("https://cs-build-week-adventure-game.herokuapp.com/api/adv/rooms")
+      .then(response => {
+        console.log("response.data: ", response.data);
+        const roomsDict = response.data.rooms;
+        let arr = [];
+        for (let r in roomsDict) {
+          let disRoom = {
+            ...roomsDict[r],
+            id: r
+          };
+          arr.push(disRoom);
+        }
+        setRooms(arr);
+      })
+      .catch(error => {
+        console.log("error: ", error);
       });
   }, []);
 
@@ -44,18 +68,8 @@ const GameStuff = props => {
         move
       )
       .then(res => {
-        // console.log(response.data);
         console.log(res.data);
         setState(res.data);
-        // setState({
-        //   name: res.data.name,
-        //   title: res.data.title,
-        //   description: res.data.description,
-        //   // players: Array.from(res.data.players),
-        //   // players: [state.players, ...res.data.players],
-        //   players: Object.values(res.data.players),
-        //   error_msg: res.data.error_msg
-        // });
       })
       .catch(error => {
         console.log(error);
@@ -64,9 +78,9 @@ const GameStuff = props => {
 
   return (
     <div className="gamestuff">
+      <GameContainer rooms={rooms} current={state.title} />
+
       <div className="stats">
-        <h3>Name</h3>
-        <p>{state.name}</p>
         <h4>Room</h4>
         <p>{state.title}</p>
         <h5>Description</h5>
@@ -79,15 +93,17 @@ const GameStuff = props => {
         <p>{state.players}</p>
       </div>
 
-      <div className="game-container">
-        <div className="placeholder"></div>
-      </div>
-
       <div className="controls">
-        <button onClick={() => move("n")}>Move North</button>
-        <button onClick={() => move("e")}>Move East</button>
-        <button onClick={() => move("s")}>Move South</button>
-        <button onClick={() => move("w")}>Move West</button>
+        <div className="controls-top">
+          <button onClick={() => move("n")}>Move North</button>
+        </div>
+        <div className="controls-middle">
+          <button onClick={() => move("w")}>Move West</button>
+          <button onClick={() => move("e")}>Move East</button>
+        </div>
+        <div className="controls-bottom">
+          <button onClick={() => move("s")}>Move South</button>
+        </div>
         <p>{state.error_msg}</p>
       </div>
     </div>
